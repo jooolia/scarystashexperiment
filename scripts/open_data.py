@@ -22,7 +22,6 @@ if __name__ == "__main__":
     data = io.loadmat(fname)
     spt = data['spikeTimes']
     n_spt = spt.shape[1]
-    print(spt.shape)
     correlations = np.zeros((n_spt, n_spt))
     for i in range(n_spt):
         for j in range(n_spt):
