@@ -8,7 +8,16 @@ from pyNeuro import analysis
 
 if __name__ == "__main__":
 
-    data = io.loadmat('../data/data_03_13_12_t2.mat')
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('datafile')
+    parser.add_argument('--save')
+    args = parser.parse_args()
+
+    fname = args.datafile 
+    outfname = args.save
+    data = io.loadmat(fname)
     spt = data['spikeTimes']
     n_spt = spt.shape[1]
     print(spt.shape)
@@ -18,9 +27,12 @@ if __name__ == "__main__":
             correlations[i,j] = analysis.calc_corr_coef(spt[0][i][0,:], spt[0][j][0,:])
 
     # plot the histogram
-    plt.hist(correlations.flat, bins=50)
-    plt.xlabel('Correlation value [a.u.]')
-    plt.ylabel('# occurrences')
-    plt.show()
+    if args.save:
+        np.savez(args.save, correlations=correlations)
+    else:
+        plt.hist(correlations.flat, bins=50)
+        plt.xlabel('Correlation value [a.u.]')
+        plt.ylabel('# occurrences')
+        plt.show()
 
 
