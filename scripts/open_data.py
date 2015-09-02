@@ -13,6 +13,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('datafile')
     parser.add_argument('--save')
+    parser.add_argument('--bin-size', type=float, default=10.)
+
     args = parser.parse_args()
 
     fname = args.datafile 
@@ -24,7 +26,7 @@ if __name__ == "__main__":
     correlations = np.zeros((n_spt, n_spt))
     for i in range(n_spt):
         for j in range(n_spt):
-            correlations[i,j] = analysis.calc_corr_coef(spt[0][i][0,:], spt[0][j][0,:])
+            correlations[i,j] = analysis.calc_corr_coef(spt[0][i][0,:], spt[0][j][0,:], args.bin_size)
 
     # plot the histogram
     if args.save:
