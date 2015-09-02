@@ -12,9 +12,15 @@ def mk_targetname(p):
     filename = core + '.npz'
     return os.path.join('../results', filename)
     
-
-src = glob.glob('../data/data_02*.mat')
+def mk_figurename(p):
+    directory, filename = os.path.split(p)
+    core, ext = os.path.splitext(filename)
+    filename = core + '.png'
+    return os.path.join('../results', filename)
+       
+src = glob.glob('../data/data_02*.mat')   
 targets = list(map(mk_targetname, src))
+correlations = list(map(mk_figurename, src))
 
 def task_open_data():
     for inp, out in zip(src, targets):
@@ -25,10 +31,12 @@ def task_open_data():
             'name' : os.path.split(inp)[1]
             }
 
-def task_plot_correlations():
-    return {
+def task_all_correlations():
+    for inp, out in zip(targets, correlations):
+        yield {
         'actions' : ['python plot_correlations_histogram.py %(dependencies)s --save %(targets)s'],
-        'file_dep' : ['../results/correlations.npz'],
-        'targets' : ['../figures/correlations.png']
-        }
+            'file_dep' : [inp],
+            'targets' : [out],
+            'name' : os.path.split(inp)[1]
+            }
 
